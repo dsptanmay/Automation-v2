@@ -48,3 +48,22 @@ class Main:
         print("-" * term.columns)
         print("Python-Github Automation".center(term.columns))
         print("-" * term.columns)
+
+    def run(self):
+        choices = [
+            "Make A Repository Locally",
+            "Make A Repository and then push it to GitHub",
+        ]
+
+        action = qr.select(
+            "Select An Action:",
+            choices=choices,
+            default=choices[0],
+        ).ask()
+
+        if action == choices[0]:
+            pass
+        elif action == choices[1]:
+            pass
+        else:
+            raise ValueError("Error in Choosing Value!")
