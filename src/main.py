@@ -7,7 +7,7 @@ from tkinter import filedialog
 try:
     import questionary as qr
     from github import Github
-    from rich import print
+    import rich
 except ImportError:
     subprocess.check_call(
         [
@@ -25,7 +25,7 @@ except ImportError:
         stdout=subprocess.DEVNULL,
     )
 finally:
-    from rich import print
+    import rich
 
     print("All modules successfully installed!")
     subprocess.check_call(
@@ -48,6 +48,7 @@ class Main:
         print("-" * term.columns)
         print("Python-Github Automation".center(term.columns))
         print("-" * term.columns)
+        self.specialCharacters = ["*", "/", "\\", "|", "?", "<", ">"]
 
     def run(self):
         choices = [
@@ -67,3 +68,31 @@ class Main:
             pass
         else:
             raise ValueError("Error in Choosing Value!")
+
+    def localRepo(self):
+        root = tk.Tk()
+        root.withdraw()
+
+        while True:
+            folderPath = filedialog.askdirectory(
+                title="Choose the directory in which you want to store your project:",
+                initialdir="~",
+            )
+            if folderPath:
+                break
+            else:
+                print("Please Choose a folder path!")
+
+        while True:
+            projectName = qr.text(
+                "Enter the Name of the Project:", default="Local Project"
+            ).ask()
+            for c in projectName:
+                if c in self.specialCharacters:
+                    print("Invalid Folder Name!")
+                    pass
+            else:
+                break
+
+        os.chdir(folderPath)
+        os.mkdir(projectName)
