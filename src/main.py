@@ -48,7 +48,7 @@ class Main:
         print("-" * term.columns)
         print("Python-Github Automation".center(term.columns))
         print("-" * term.columns)
-        self.specialCharacters = ["*", "/", "\\", "|", "?", "<", ">"]
+        self.specialCharacters = ["*", "/", "\\", "|", "?", "<", ">", ":"]
 
     def run(self):
         choices = [
@@ -83,6 +83,8 @@ class Main:
             else:
                 print("Please Choose a folder path!")
 
+        os.chdir(folderPath)
+
         while True:
             projectName = qr.text(
                 "Enter the Name of the Project:", default="Local Project"
@@ -91,8 +93,31 @@ class Main:
                 if c in self.specialCharacters:
                     print("Invalid Folder Name!")
                     pass
+                elif os.path.isdir(projectName) is True:
+                    print("Folder already in use!\nTry again")
             else:
                 break
 
-        os.chdir(folderPath)
         os.mkdir(projectName)
+
+        rich.print(f"[bold green]Folder for {projectName} was successfully created![/]")
+        os.chdir(projectName)
+        os.mkdir("src")
+        os.mkdir("tests")
+
+        venvName = qr.select(
+            "Choose a Name for the Virtual Environment:",
+            choices=[".env", ".venv", "env", "venv"],
+            default=".venv",
+        ).ask()
+
+        subprocess.check_call(
+            [
+                sys.executable,
+                "-m",
+                "venv",
+                venvName,
+            ],
+            stdout=subprocess.DEVNULL,
+            shell=True,
+        )
